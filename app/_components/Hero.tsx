@@ -3,6 +3,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from '@/components/ui/button'
 import { ArrowBigDownIcon, ArrowDown, Globe2, GlobeIcon, Landmark, Plane, Send } from 'lucide-react'
 import HeroVideoDialog from "@/components/magicui/hero-video-dialog";
+import { WarpBackground } from "@/components/magicui/warp-background";
 
 const suggestions = [
     {
@@ -23,6 +24,7 @@ const suggestions = [
 
 function Hero() {
     return (
+        
         <div className='mt-24 flex items-center justify-center'>
             {/* Content  */}
 
@@ -63,6 +65,7 @@ function Hero() {
                     />
                 </div>
             </div>
+                
         </div>
     )
 }
