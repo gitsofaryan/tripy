@@ -8,7 +8,7 @@ import { WarpBackground } from "@/components/magicui/warp-background";
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation'
 
-const suggestions = [
+export const suggestions = [
     {
         title: 'Create New Trip',
         icon: <Globe2 className='text-blue-400 h-5,w-5' />,
@@ -28,19 +28,19 @@ const suggestions = [
 function Hero() {
 
 
-    const {user}=useUser();
+    const { user } = useUser();
     const router = useRouter();
     const onSend = () => {
 
-        if (!user){
+        if (!user) {
             router.push('/sign-in');
             return;
-        } 
-        
+        }
+
     }
 
     return (
-        
+
         <div className='mt-24 flex items-center justify-center'>
             {/* Content  */}
 
@@ -55,7 +55,7 @@ function Hero() {
                     <Textarea placeholder="Create a trip for Paris from New York"
                         className='w-full h-10 bg-transparent border-none focus-visible:ring-0 shadow-none resize-none'
                     />
-                    <Button size={'icon'} className='absolute bottom-2 right-2' onClick={()=>onSend()}>
+                    <Button size={'icon'} className='absolute bottom-2 right-2' onClick={() => onSend()}>
                         <Send className='h-4 w-4' />
                     </Button>
                 </div>
@@ -81,7 +81,7 @@ function Hero() {
                     />
                 </div>
             </div>
-                
+
         </div>
     )
 }
