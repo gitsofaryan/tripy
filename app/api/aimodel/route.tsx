@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
         }
 
         // Get the Gemini model
-        const model = genAI.getGenerativeModel({ 
+        const model = genAI.getGenerativeModel({
             model: "gemini-1.5-flash",
             generationConfig: {
                 responseMimeType: "application/json",
@@ -34,26 +34,14 @@ export async function POST(req: NextRequest) {
         4) Budget (Low, Medium, High), 
         5) Trip duration (number of days), 
         6) Travel interests (e.g., adventure, sightseeing, cultural, food, nightlife, relaxation), 
-        7) Special requirements or preferences (if any). 
-        
-        Do not ask multiple questions at once or irrelevant questions; if any answer is unclear, politely ask for clarification. Always maintain a conversational, interactive style.
-        
-        IMPORTANT: With each response, you must specify which UI component to display using EXACTLY these values:
-        - "budget" - when asking about budget preferences
-        - "groupSize" - when asking about group size  
-        - "TripDuration" - when asking about trip duration/days
-        - "Final" - when generating the complete final trip plan
-        - "default" - for any other questions
-        
-        Always return a JSON response with the schema: { "resp":"Your response text", "ui":"exact ui string from above list" }`;
+        7) Special requirements or preferences (if any). Do not ask multiple questions at once or irrelevant questions; 
+        if any answer is unclear, politely ask for clarification. Always maintain a conversational, interactive style, and with each response also send which UI component to display (e.g., 'budget/groupSize/tripDuration/final', where Final means generating the complete final output). Once all details are collected, generate and return a strict JSON response only (no explanations or extra text) with the schema: { "resp":"Text Resp", "ui":"budget/groupSize/tripDuration/final" }`;
 
         // Build conversation history
         let conversationHistory = systemPrompt + "\n\n";
         messages.forEach((msg: any) => {
             conversationHistory += `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}\n`;
         });
-
-        conversationHistory += "\nRemember: Return ONLY valid JSON with 'resp' and 'ui' fields. Use exact UI strings: budget, groupSize, TripDuration, Final, or default.";
 
         // Generate response
         const result = await model.generateContent(conversationHistory);

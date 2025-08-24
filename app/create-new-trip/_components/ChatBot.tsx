@@ -5,11 +5,16 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from '@/components/ui/button'
 import { Loader, Send } from 'lucide-react'
 import EmptyBoxState from '@/app/_components/EmptyBoxState'
+import GroupSize from '@/app/_components/GroupSize'
+import BudgetList from '@/app/_components/BudgetList'
+import SelectDaysUI from '@/app/_components/SelectDaysUI'
+import FinalUI from '@/app/_components/FinalUI'
 export default function ChatBot() {
 
     type Message = {
-        role: String,
-        content: String
+        role: string,
+        content: string
+        ui?: string,
     }
     const [messages, setMessages] = useState<Message[]>([]);
     const [userInput, setUserInput] = useState<string>('');
@@ -42,9 +47,11 @@ export default function ChatBot() {
 
             setMessages((prev: Message[]) => [...prev, {
                 role: 'assistant',
-                content: result?.data?.resp || 'Sorry, I didn\'t receive a proper response.'
+                content: result?.data?.resp || 'Sorry, I didn\'t receive a proper response.',
+                ui: result?.data?.ui || 'default',
             }]);
-            console.log(result?.data);
+            console.log('API Response:', result?.data);
+            console.log('UI String:', result?.data?.ui);
         } catch (error) {
             console.error('Request failed:', error);
             setMessages((prev: Message[]) => [...prev, {
@@ -56,15 +63,36 @@ export default function ChatBot() {
         }
     }
 
+
+
+    const renderGenUI = (ui: string) => {
+        console.log('Rendering UI for:', ui);
+        if (ui == 'budget') {
+            return <BudgetList onSelectedOption={(v: string) => { setUserInput(v); onSend() }} />;
+        } else if (ui == 'groupSize') {
+            return <GroupSize
+                onSelectedOption={(v: string) => { setUserInput(v); onSend() }}
+            />
+        } else if (ui == 'TripDuration' || ui == 'days') {
+            return <SelectDaysUI
+                onSelectedOption={(v: string) => { setUserInput(v); onSend() }}
+            />
+        } else if (ui == 'Final' || ui == 'final') {
+            return <FinalUI onSelectedOption={(v: string) => { setUserInput(v); onSend() }} />;
+        }
+        return null
+    }
+
+
     return (
 
         <div className='h-[80vh] flex flex-col'>
             {/* Chatbox UI */}
-            {messages?.length==0&&
-            <EmptyBoxState onSelectOption={(v:string)=>{setUserInput(v); onSend()}}/>}
+            {messages?.length == 0 &&
+                <EmptyBoxState onSelectOption={(v: string) => { setUserInput(v); onSend() }} />}
             <section className='flex-1 overflow-y-auto p-4'>
-                {messages.map((msg: Message, index)=>(
-                    msg.role=='user' ? (
+                {messages.map((msg: Message, index) => (
+                    msg.role == 'user' ? (
                         <div className="flex justify-end mt-2" key={index}>
                             <div className="max-w-lg bg-primary text-white px-4 py-2 rounded-lg">
                                 {msg.content}
@@ -73,12 +101,13 @@ export default function ChatBot() {
                     ) : (
                         <div className="flex justify-start mt-2" key={index}>
                             <div className="max-w-lg bg-gray-100 text-text-black px-4 py-2 rounded-lg">
-                                {loading?<Loader className='animate-spin'/>: msg.content}
+                                {loading ? <Loader className='animate-spin' /> : msg.content}
+                                {renderGenUI(msg.ui ?? '')}
                             </div>
                         </div>
                     )
                 ))}
-               
+
             </section>
 
             <section className=''>

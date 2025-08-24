@@ -7,6 +7,7 @@ import HeroVideoDialog from "@/components/magicui/hero-video-dialog";
 import { WarpBackground } from "@/components/magicui/warp-background";
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export const suggestions = [
     {
@@ -51,6 +52,7 @@ function Hero() {
                 <p className='text-lg'>Tell me where you want to go? I'll handle the rest: Flights, Hotels, Trip Planning - all in seconds</p>
 
                 {/* Input Box  */}
+                <Link href={'/create-new-trip'}>
                 <div className='relative border rounded-2xl p-4'>
                     <Textarea placeholder="Create a trip for Paris from New York"
                         className='w-full h-10 bg-transparent border-none focus-visible:ring-0 shadow-none resize-none'
@@ -59,8 +61,11 @@ function Hero() {
                         <Send className='h-4 w-4' />
                     </Button>
                 </div>
+               
+                </Link>
 
                 {/* Suggestion List  */}
+                <Link href={'/create-new-trip'}>
                 <div className='flex gap-2'>
                     {suggestions.map((suggestion, index) => {
                         return <div key={index} className='flex items-center gap-2 border rounded-full p-2 cursor-pointer hover:bg-primary hover:text-white'>
@@ -69,9 +74,10 @@ function Hero() {
                         </div>
                     })}
                 </div>
+                    </Link>
                 <div className='flex items-center justify-center flex-col'>
 
-                    <h2 className='my-7 mt-5 flex gap-2 text-center '>Not Sure where to start? <strong>See how it works</strong><ArrowDown /></h2>
+                    <h2 className='my-7 mt-5 flex gap-2 text-center '>Not Sure where to start? <strong>See how it works</strong> <ArrowBigDownIcon className='mx-auto mt-2 animate-bounce' /></h2>
                     <HeroVideoDialog
                         className="block dark:hidden"
                         animationStyle="from-center"
